@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": ">=12.11.0",
+    "npm": ">=1.16.0"
+  },
   "scripts": {
     "start": "http-server vanilla-js -a 0.0.0.0 -p 8010 -c-1",
+    "toc": "doctoc README.md --github",
     "vue": "parcel vue-js/index.html"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.0.2",
+    "doctoc": "^1.4.0",
     "http-server": "^0.11.1",
     "parcel-bundler": "^1.12.4",
     "sass": "^1.23.3",
