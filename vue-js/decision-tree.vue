@@ -1,7 +1,7 @@
 <script>
 import { treeToArray } from "../vanilla-js/data-parser.js";
 
-const formatPercent = new Intl.NumberFormat(`en`, { style: `percent` }).format;
+const formatPercent = new Intl.NumberFormat(`en`, { style: `percent`, minimumFractionDigits: 2 }).format;
 
 export default {
   name: `decistion-tree`,
@@ -34,7 +34,10 @@ export default {
         v-for="(section, sectionIndex) in arrayTree"
         :key="`section-${sectionIndex}`"
       >
-        <li class="tree__leaf" v-for="leaf in section" :key="leaf.id">{{ leaf.text }}</li>
+        <li class="tree__leaf" v-for="leaf in section" :key="leaf.id">
+          <span v-if="leaf.text">{{ leaf.text }}</span>
+          <span v-else>avg. value: {{leaf.value | number}} <br />(samples: {{leaf.samplesPercentage | percent}})</span>
+        </li>
       </ol>
     </div>
     <aside class="connectors">
@@ -45,8 +48,8 @@ export default {
       >
         <li class="connectors__item" v-for="leaf in section" :key="`connector-${leaf.id}`">
           <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="connectors__lines">
-            <path class="connectors__line" d="M 0,6  C 1,6 1,3 2,3" />
-            <path class="connectors__line" d="M 0,6  C 1,6 1,9 2,9" />
+            <path class="connectors__line connectors__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
+            <path class="connectors__line connectors__line--no" d="M 0,6  C 1,6 1,9 2,9" />
           </svg>
         </li>
       </ol>
@@ -57,6 +60,8 @@ export default {
 <style lang="scss" scoped>
 .decision-tree {
   --tree-gutter: 1rem;
+  --tree-yes: hsl(81, 44%, 50%);
+  --tree-no: #b93c3c;
   position: relative;
 }
 
@@ -72,18 +77,19 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  flex: 1 0 var(--tree-column-width);
+  flex: 0 0 var(--tree-column-width);
+  width: var(--tree-column-width);
   list-style: none;
   margin: 0;
   padding: 0 var(--tree-gutter);
 }
 .tree__leaf {
-  border: 1px solid red;
   padding: 0.5rem;
+  background: rgb(126, 198, 226);
   text-align: center;
 }
 .tree__section:last-child .tree__leaf {
-  border-color: blue;
+  background: orange;
 }
 .tree__section:last-child .tree__leaf:nth-child(odd) {
   margin-top: 1rem;
@@ -106,7 +112,6 @@ export default {
   left: 0;
   display: flex;
   pointer-events: none;
-  justify-content: space-around;
   overflow: hidden;
   margin: 0;
 }
@@ -114,7 +119,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  flex: 1 0 var(--tree-column-width);
+  flex: 0 0 var(--tree-column-width);
+  width: var(--tree-column-width);
   margin: 0;
   padding: 0 var(--tree-gutter);
   list-style: none;
@@ -134,13 +140,19 @@ export default {
   height: 100%;
 }
 .connectors__line {
-  stroke-width: 2;
+  stroke-width: 1.5;
   stroke: black;
   fill: none;
   // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect
   // https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke
   // https://stackoverflow.com/a/1304602
   vector-effect: non-scaling-stroke;
+}
+.connectors__line--yes {
+  stroke: var(--tree-yes);
+}
+.connectors__line--no {
+  stroke: var(--tree-no);
 }
 .connectors__section:last-child {
   // keep the last section to be rightfully positioned

@@ -1,10 +1,14 @@
 import TREE from "./tree-data.js";
 import { treeToArray } from "./data-parser.js";
 
+const formatPercent = new Intl.NumberFormat(`en`, { style: `percent`, minimumFractionDigits: 2 }).format;
+
 const result = treeToArray(TREE);
 
+const cssColumnWidth = `--tree-column-width: ${formatPercent(1 / result.length)}`
+
 function buildTree(tree) {
-  return `<section class="tree">
+  return `<section class="tree" style="${cssColumnWidth}">
 ${tree.map(buildWrapper).join(`\n`)}
 </section>`;
 }
@@ -15,12 +19,12 @@ ${buildNodes(stepsData)}
 }
 function buildNodes(stepsData) {
   return stepsData
-    .map(step => `<li class="tree__item">${step.text}</li>`)
+    .map(step => step.text ? `<li class="tree__item">${step.text}</li>` : `<li class="tree__item">${step.value}<br> (${formatPercent(step.samplesPercentage)})</li>`)
     .join(`\n`);
 }
 
 function buildConnectors(tree) {
-  return `<section class="connectors">
+  return `<section class="connectors" style="${cssColumnWidth}">
 ${tree.map(buildConnectorWrapper).join(`\n`)}
 </section>`;
 }

@@ -8,13 +8,17 @@ html {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 #main {
   position: relative;
 }
 
 :root {
   --tree-gutter: 1rem;
-  --flex-size: 20%;
 }
 /*
   TREE
@@ -28,7 +32,8 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  flex: 1 0 var(--flex-size);
+  flex: 0 0 var(--tree-column-width);
+  width: var(--tree-column-width);
   list-style: none;
   margin: 0;
   padding: 0 var(--tree-gutter);
@@ -69,7 +74,8 @@ html {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  flex: 1 0 var(--flex-size);
+  flex: 0 0 var(--tree-column-width);
+  width: var(--tree-column-width);
   margin: 0;
   padding: 0 var(--tree-gutter);
   list-style: none;
