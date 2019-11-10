@@ -1,10 +1,13 @@
 <script>
-import Vue from "vue";
+import TREE from "../vanilla-js/tree-data.js";
+import DecisionTree from "./decision-tree.vue";
 
 export default {
+  name: `application`,
+  components: { DecisionTree },
   data() {
     return {
-      bundler: "Parcel"
+      tree: TREE
     };
   }
 };
@@ -12,14 +15,10 @@ export default {
 
 
 <template >
-  <div class="container">
-    Hello {{bundler}}
-    </div>
-
+  <main class="container">
+    <decision-tree :tree="tree" />
+  </main>
 </template>
 
 <style lang="scss" scoped>
-.container {
-  color: green;
-}
 </style>

@@ -1,15 +1,13 @@
-export function treeToArray(level, index= 0, previousResult = []) {
-  const isLastResult = level.left == null
-  if (isLastResult) return previousResult
+export function treeToArray(level, index = 0, result = []) {
+  const isLastResult = level.left == null;
+  if (isLastResult) return result;
   const ownLevel = {
     text: `${level.feature} ${level.rule} ${level.value}`
-  }
-  previousResult[index] = previousResult[index] || []
-  previousResult[index].push(ownLevel)
+  };
+  result[index] = result[index] || [];
+  result[index].push(ownLevel);
 
-  treeToArray(level.left, index + 1, previousResult)
-  treeToArray(level.right, index + 1, previousResult)
-  return previousResult
+  treeToArray(level.left, index + 1, result);
+  treeToArray(level.right, index + 1, result);
+  return result;
 }
-
-
