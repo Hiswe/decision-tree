@@ -77,25 +77,25 @@ html {
 }
 .connectors__item {
   flex: 1 0 auto;
-  border: 1px solid green;
   width: calc(var(--tree-gutter) * 2);
   transform: translateX(100%);
   position: relative;
 }
 svg {
-  background: pink;
   position: absolute;
   width: 100%;
   top: 0;
   bottom: 0;
   height: 100%;
-  vector-effect: none;
+  /* vector-effect: none;
+  vector-effect: non-scaling-stroke; */
 }
 path {
-  stroke-width: .25;
+  stroke-width: 2;
   stroke: black;
   fill: none;
-  vector-effect: none;
+  /* vector-effect: non-scaling-stroke; */
+  /* vector-effect: none; */
 }
 .connectors__section:last-child {
   visibility: hidden;

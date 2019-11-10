@@ -2,7 +2,6 @@ import TREE from "./tree-data.js";
 import { treeToArray } from "./data-parser.js";
 
 const result = treeToArray(TREE);
-// console.log(treeToArray(TREE));
 
 function buildTree(tree) {
   return `<section class="tree">
@@ -15,7 +14,9 @@ ${buildNodes(stepsData)}
 </ol>`;
 }
 function buildNodes(stepsData) {
-  return stepsData.map(step => `<li class="tree__item">${step.text}</li>`).join(`\n`);
+  return stepsData
+    .map(step => `<li class="tree__item">${step.text}</li>`)
+    .join(`\n`);
 }
 
 function buildConnectors(tree) {
@@ -30,19 +31,27 @@ ${buildConnectorNodes(stepsData)}
 }
 // https://css-tricks.com/svg-path-syntax-illustrated-guide/
 function buildConnectorNodes(stepsData) {
-  return stepsData.map(step => `<li class="connectors__item">
+  return stepsData
+    .map(
+      step => `<li class="connectors__item">
 <svg viewBox="0 0 2 12" preserveAspectRatio="none">
-<path d="M 0,6
-  C 1,6 1,3 2,3
-  "/>
-<path d="M 0,6
-  C 1,6 1,9 2,9"/>
+<path
+  vector-effect="non-scaling-stroke"
+  d="M 0,6
+  C 1,6 1,3 2,3"
+/>
+<path
+  vector-effect="non-scaling-stroke"
+  d="M 0,6
+  C 1,6 1,9 2,9"
+/>
 </svg>
-</li>`).join(`\n`);
+</li>`
+    )
+    .join(`\n`);
 }
 
 document.querySelector(`#main`).innerHTML = `
 ${buildTree(result)}
 ${buildConnectors(result)}
 `;
-// console.log(buildTree(result))

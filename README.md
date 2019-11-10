@@ -29,4 +29,4 @@ yarn install
 yarn start
 ```
 
-application will be accessible at `http://localhost:8080/`
+application will be accessible at `http://localhost:8010/`
