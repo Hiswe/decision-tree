@@ -86,13 +86,16 @@ svg {
   background: pink;
   position: absolute;
   width: 100%;
-  top: 25%;
-  bottom: 25%;
-  height: 50%;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  vector-effect: none;
 }
 path {
   stroke-width: .25;
   stroke: black;
+  fill: none;
+  vector-effect: none;
 }
 .connectors__section:last-child {
   visibility: hidden;

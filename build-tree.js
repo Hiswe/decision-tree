@@ -31,11 +31,12 @@ ${buildConnectorNodes(stepsData)}
 // https://css-tricks.com/svg-path-syntax-illustrated-guide/
 function buildConnectorNodes(stepsData) {
   return stepsData.map(step => `<li class="connectors__item">
-<svg viewBox="0 0 2 6" preserveAspectRatio="none">
-<path d="M 0,3
-  l 2 -3"/>
-<path d="M 0,3
-  l 2 3"/>
+<svg viewBox="0 0 2 12" preserveAspectRatio="none">
+<path d="M 0,6
+  C 1,6 1,3 2,3
+  "/>
+<path d="M 0,6
+  C 1,6 1,9 2,9"/>
 </svg>
 </li>`).join(`\n`);
 }
