@@ -1,7 +1,10 @@
 <script>
 import { treeToArray } from "../vanilla-js/data-parser.js";
 
-const formatPercent = new Intl.NumberFormat(`en`, { style: `percent`, minimumFractionDigits: 2 }).format;
+const formatPercent = new Intl.NumberFormat(`en`, {
+  style: `percent`,
+  minimumFractionDigits: 2
+}).format;
 
 export default {
   name: `decistion-tree`,
@@ -36,7 +39,11 @@ export default {
       >
         <li class="tree__leaf" v-for="leaf in section" :key="leaf.id">
           <span v-if="leaf.text">{{ leaf.text }}</span>
-          <span v-else>avg. value: {{leaf.value | number}} <br />(samples: {{leaf.samplesPercentage | percent}})</span>
+          <span v-else>
+            avg. value: {{leaf.value | number}}
+            <br />
+            (samples: {{leaf.samplesPercentage | percent}})
+          </span>
         </li>
       </ol>
     </div>
@@ -62,6 +69,8 @@ export default {
   --tree-gutter: 1rem;
   --tree-yes: hsl(81, 44%, 50%);
   --tree-no: #b93c3c;
+  --tree-decision-background: rgb(126, 198, 226);
+  --tree-result-background: orange;
   position: relative;
 }
 
@@ -85,11 +94,11 @@ export default {
 }
 .tree__leaf {
   padding: 0.5rem;
-  background: rgb(126, 198, 226);
+  background: var(--tree-decision-background);
   text-align: center;
 }
 .tree__section:last-child .tree__leaf {
-  background: orange;
+  background: var(--tree-result-background);
 }
 .tree__section:last-child .tree__leaf:nth-child(odd) {
   margin-top: 1rem;

@@ -19,6 +19,10 @@ body {
 
 :root {
   --tree-gutter: 1rem;
+  --tree-yes: hsl(81, 44%, 50%);
+  --tree-no: #b93c3c;
+  --tree-decision-background: rgb(126, 198, 226);
+  --tree-result-background: orange;
 }
 /*
   TREE
@@ -39,12 +43,12 @@ body {
   padding: 0 var(--tree-gutter);
 }
 .tree__item {
-  border: 1px solid red;
+  background: var(--tree-decision-background);
   padding: 0.5rem;
   text-align: center;
 }
 .tree__section:last-child .tree__item {
-  border-color: blue;
+  background: var(--tree-result-background);
 }
 .tree__section:last-child .tree__item:nth-child(odd) {
   margin-top: 1rem;
@@ -96,12 +100,15 @@ svg {
 }
 path {
   stroke-width: 2;
-  stroke: black;
+  stroke: var(--tree-yes);
   fill: none;
   /* https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect */
   /* https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke */
   /* https://stackoverflow.com/a/1304602 */
   vector-effect: non-scaling-stroke;
+}
+path:last-child {
+  stroke: var(--tree-no);
 }
 .connectors__section:last-child {
   /* keep the last section to be rightfully positioned */
