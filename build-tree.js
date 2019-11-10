@@ -36,12 +36,10 @@ function buildConnectorNodes(stepsData) {
       step => `<li class="connectors__item">
 <svg viewBox="0 0 2 12" preserveAspectRatio="none">
 <path
-  vector-effect="non-scaling-stroke"
   d="M 0,6
   C 1,6 1,3 2,3"
 />
 <path
-  vector-effect="non-scaling-stroke"
   d="M 0,6
   C 1,6 1,9 2,9"
 />

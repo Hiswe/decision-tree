@@ -87,15 +87,15 @@ svg {
   top: 0;
   bottom: 0;
   height: 100%;
-  /* vector-effect: none;
-  vector-effect: non-scaling-stroke; */
 }
 path {
   stroke-width: 2;
   stroke: black;
   fill: none;
-  /* vector-effect: non-scaling-stroke; */
-  /* vector-effect: none; */
+  /* https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect */
+  /* https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke */
+  /* https://stackoverflow.com/a/1304602 */
+  vector-effect: non-scaling-stroke;
 }
 .connectors__section:last-child {
   visibility: hidden;
