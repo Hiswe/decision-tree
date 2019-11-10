@@ -98,5 +98,10 @@ path {
   vector-effect: non-scaling-stroke;
 }
 .connectors__section:last-child {
+  /* keep the last section to be rightfully positioned */
   visibility: hidden;
+}
+.connectors__section:nth-last-child(2) .connectors__item {
+  margin-top: .66rem;
+  margin-bottom: .66rem;
 }
