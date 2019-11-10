@@ -1,37 +1,85 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
-
 #main {
-  min-height: 100vh;
-  display: flex;
+  position: relative;
 }
-ol {
+
+:root {
+  --tree-gutter: 1rem;
+  --flex-size: 20%;
+}
+/*
+  TREE
+ */
+
+.tree {
+  display: flex;
+  min-height: 100vh;
+}
+.tree__section {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  flex: 1 0 auto;
+  flex: 1 0 var(--flex-size);
   list-style: none;
   margin: 0;
-  padding: 0 1rem;
+  padding: 0 var(--tree-gutter);
 }
-
-li {
+.tree__item {
   border: 1px solid red;
   padding: 0.5rem;
   text-align: center;
 }
-
-ol:last-child li {
+.tree__section:last-child .tree__item {
   border-color: blue;
 }
-ol:last-child li:nth-child(odd) {
+.tree__section:last-child .tree__item:nth-child(odd) {
   margin-top: 1rem;
   margin-bottom: 0.25rem;
 }
-
-ol:last-child li:nth-child(even) {
+.tree__section:last-child .tree__item:nth-child(even) {
   margin-top: 0.25rem;
   margin-bottom: 1rem;
+}
+
+/*
+  CONNECTORS
+ */
+
+.connectors {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  pointer-events: none;
+  justify-content: space-around;
+
+}
+.connectors__section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1 0 var(--flex-size);
+  margin: 0;
+  padding: 0 var(--tree-gutter);
+  list-style: none;
+  /* transform: translateX(50%); */
+}
+.connectors__item {
+  flex: 1 0 auto;
+  border: 1px solid green;
+}
+
+.connectors__section:last-child {
+  visibility: hidden;
 }
