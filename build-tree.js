@@ -18,11 +18,6 @@ function buildNodes(stepsData) {
   return stepsData.map(step => `<li class="tree__item">${step.text}</li>`).join(`\n`);
 }
 
-// function buildConnectors(tree) {
-//   return `<section class="connectors">
-// ${tree.slice(0, tree.length - 1).map(buildConnectorWrapper).join(`\n`)}
-// </section>`;
-// }
 function buildConnectors(tree) {
   return `<section class="connectors">
 ${tree.map(buildConnectorWrapper).join(`\n`)}
@@ -33,8 +28,16 @@ function buildConnectorWrapper(stepsData) {
 ${buildConnectorNodes(stepsData)}
 </ol>`;
 }
+// https://css-tricks.com/svg-path-syntax-illustrated-guide/
 function buildConnectorNodes(stepsData) {
-  return stepsData.map(step => `<li class="connectors__item"></li>`).join(`\n`);
+  return stepsData.map(step => `<li class="connectors__item">
+<svg viewBox="0 0 2 6" preserveAspectRatio="none">
+<path d="M 0,3
+  l 2 -3"/>
+<path d="M 0,3
+  l 2 3"/>
+</svg>
+</li>`).join(`\n`);
 }
 
 document.querySelector(`#main`).innerHTML = `

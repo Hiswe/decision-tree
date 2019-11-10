@@ -63,7 +63,7 @@ html {
   display: flex;
   pointer-events: none;
   justify-content: space-around;
-
+  overflow: hidden;
 }
 .connectors__section {
   display: flex;
@@ -73,13 +73,27 @@ html {
   margin: 0;
   padding: 0 var(--tree-gutter);
   list-style: none;
-  /* transform: translateX(50%); */
+  align-items: flex-end;
 }
 .connectors__item {
   flex: 1 0 auto;
   border: 1px solid green;
+  width: calc(var(--tree-gutter) * 2);
+  transform: translateX(100%);
+  position: relative;
 }
-
+svg {
+  background: pink;
+  position: absolute;
+  width: 100%;
+  top: 25%;
+  bottom: 25%;
+  height: 50%;
+}
+path {
+  stroke-width: .25;
+  stroke: black;
+}
 .connectors__section:last-child {
   visibility: hidden;
 }
