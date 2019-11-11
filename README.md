@@ -15,7 +15,7 @@
 
 ## requirements
 
-- [node](http://nodejs.org/download/) >= 12.11.0
+- [node](http://nodejs.org/download/) >= 10.17.0
 - [yarn](https://yarnpkg.com/lang/en/) >= 1.16.0
 
 ## commands
