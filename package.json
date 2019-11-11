@@ -8,6 +8,8 @@
     "npm": ">=1.16.0"
   },
   "scripts": {
+    "build": "parcel build vue-js/index.html",
+    "serve:build": "http-server dist -a 0.0.0.0 -p 8020 -c-1",
     "start": "http-server vanilla-js -a 0.0.0.0 -p 8010 -c-1",
     "toc": "doctoc README.md --github",
     "vue": "parcel vue-js/index.html"
