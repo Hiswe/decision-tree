@@ -1,3 +1,5 @@
+import { flextree } from "d3-flextree";
+
 export function treeToArray(level, index = 0, result = []) {
   const isLastResult = level.left == null;
 
@@ -16,4 +18,37 @@ export function treeToArray(level, index = 0, result = []) {
   treeToArray(level.left, index + 1, result);
   treeToArray(level.right, index + 1, result);
   return result;
+}
+
+const layout = flextree();
+
+export function buildTreeForD3Layout(node) {
+  const isLastResult = node.left == null && node.right == null;
+  const data = isLastResult
+    ? {
+        value: node.value[0],
+        samples: node.samples
+      }
+    : {
+        text: `${node.feature} ${node.rule} ${node.value}`,
+        samples: node.samples
+      };
+  const computedNode = {
+    size: [4, 4],
+    isLastResult,
+    ...data
+  };
+
+  if (isLastResult) return computedNode;
+  const children = [];
+  if (node.left != null) children.push(buildTreeForD3Layout(node.left));
+  if (node.right != null) children.push(buildTreeForD3Layout(node.right));
+
+  computedNode.children = children;
+
+  return computedNode;
+}
+
+export function buildLayout(tree) {
+  return layout(layout.hierarchy(buildTreeForD3Layout(tree)))
 }

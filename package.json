@@ -11,18 +11,21 @@
     "build": "parcel build vue-js/index.html",
     "serve:build": "http-server dist -a 0.0.0.0 -p 8020 -c-1",
     "start": "http-server vanilla-js -a 0.0.0.0 -p 8010 -c-1",
+    "test": "node -r esm node-js/build-tree.js",
     "toc": "doctoc README.md --github",
     "vue": "parcel vue-js/index.html"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.0.2",
     "doctoc": "^1.4.0",
+    "esm": "^3.2.25",
     "http-server": "^0.11.1",
     "parcel-bundler": "^1.12.4",
     "sass": "^1.23.3",
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
+    "d3-flextree": "^2.1.1",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.4"
   }

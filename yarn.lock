@@ -1850,6 +1850,18 @@ cssstyle@^1.1.1:
   dependencies:
     cssom "0.3.x"
 
+d3-flextree@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/d3-flextree/-/d3-flextree-2.1.1.tgz#0e6b8b89b0602b073db2f488b5b8030ce318dde9"
+  integrity sha512-P0SK6bRm0PT5ZZON8Lh/aOcFfr4rO53kaYCXCgwBCvsHJcYjtOb8fNrgmpOmCMCgfrT9EczXzD8wqEO8mlkBrA==
+  dependencies:
+    d3-hierarchy "^1.1.5"
+
+d3-hierarchy@^1.1.5:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/d3-hierarchy/-/d3-hierarchy-1.1.8.tgz#7a6317bd3ed24e324641b6f1e76e978836b008cc"
+  integrity sha512-L+GHMSZNwTpiq4rt9GEsNcpLa4M96lXMR8M/nMG9p5hBE0jy6C+3hWtyZMenPQdwla249iJy7Nx0uKt3n+u9+w==
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -2215,6 +2227,11 @@ escodegen@~1.9.0:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
+
+esm@^3.2.25:
+  version "3.2.25"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
 esprima@^3.1.3:
   version "3.1.3"
