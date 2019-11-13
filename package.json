@@ -13,7 +13,8 @@
     "start": "http-server vanilla-js -a 0.0.0.0 -p 8010 -c-1",
     "test": "node -r esm node-js/build-tree.js",
     "toc": "doctoc README.md --github",
-    "vue": "parcel vue-js/index.html"
+    "vue": "parcel vue-js/index.html",
+    "vue:d3": "parcel vue-js-d3/index.html"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.0.2",
