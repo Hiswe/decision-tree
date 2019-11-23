@@ -69,8 +69,8 @@ export default {
         v-for="node in arrayTree.nodes"
         :key="node._id"
         :style="{
-        'grid-column': `${node.colStart} / span ${node.xSize}`,
-        'grid-row': `${node.rowStart} / span ${node.ySize}`,
+          'grid-column': `${node.colStart} / span ${node.xSize}`,
+          'grid-row': `${node.rowStart} / span ${node.ySize}`,
         }"
       >
         <strong>{{node._id}}</strong>
@@ -107,7 +107,7 @@ export default {
   position: relative;
 }
 .decision-tree__aside {
-  position: fixed;
+  position: absolute;
   top: 1rem;
   left: 1rem;
 }
