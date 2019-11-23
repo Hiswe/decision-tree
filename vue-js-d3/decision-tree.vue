@@ -19,7 +19,6 @@ function cutIntegerPart(value) {
 function unicValues(array) {
     return [...new Set(array)];
 }
-
 const getScaleFactor = flow(
     (key, array) => array.map((node) => node[key]),
     (array) => array.filter(filterInteger),
@@ -43,7 +42,6 @@ export default {
             return { width, height };
         },
         d3ArrayTree() {
-
             return buildLayout(this.tree, this.d3LeafSize);
         },
         arrayTree() {
@@ -131,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 .decision-tree {
-    --tree-gutter: 0 1rem;
+    --tree-column-gutter: 5rem;
     --tree-yes: hsl(81, 44%, 50%);
     --tree-no: #b93c3c;
     --tree-decision-background: rgb(126, 198, 226);
@@ -154,7 +152,7 @@ export default {
     display: grid;
     // min-height: 100vh;
     grid-template-rows: repeat(5, minmax(0, 1fr));
-    grid-gap: 0 3rem;
+    grid-gap: 0 var(--tree-column-gutter);
     padding: 1rem;
 }
 
