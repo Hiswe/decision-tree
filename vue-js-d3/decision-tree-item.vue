@@ -11,13 +11,11 @@ export default {
         nodeClasses() {
             return { 'decision-tree-item__node--end': this.node.data.isLastResult };
         },
+        hasParent() {
+            return this.node.parent
+        },
         position() {
-            const { node, topShit, scaleColFactor, scaleRowFactor } = this;
-            const rowStart = Math.round((node.x + topShit) * scaleRowFactor - 1);
-            const rowSize = Math.round(node.xSize * scaleRowFactor);
-            const colStart = Math.round(node.y * scaleColFactor + 1);
-            const colSize = Math.round(node.ySize * scaleColFactor);
-            return { colStart, colSize, rowStart, rowSize };
+            return this.getGridPosition(this.node);
         },
         nodeStyles() {
             const { position } = this;
@@ -34,6 +32,16 @@ export default {
             };
         },
     },
+    methods: {
+        getGridPosition(d3Node) {
+            const { topShit, scaleColFactor, scaleRowFactor } = this;
+            const rowStart = Math.round((d3Node.x + topShit) * scaleRowFactor - 1);
+            const rowSize = Math.round(d3Node.xSize * scaleRowFactor);
+            const colStart = Math.round(d3Node.y * scaleColFactor + 1);
+            const colSize = Math.round(d3Node.ySize * scaleColFactor);
+            return { colStart, colSize, rowStart, rowSize };
+        },
+    },
 };
 </script>
 
@@ -45,8 +53,8 @@ export default {
         <!-- <div class="decision-tree-item__link" :style="lineStyles">
         </div>-->
         <!-- <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="decision-tree-item__lines">
-      <path class="decision-tree-item__line decision-tree-item__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
-      <path class="decision-tree-item__line decision-tree-item__line--no" d="M 0,6  C 1,6 1,9 2,9" />
+            <path class="decision-tree-item__line decision-tree-item__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
+            <path class="decision-tree-item__line decision-tree-item__line--no" d="M 0,6  C 1,6 1,9 2,9" />
         </svg>-->
     </div>
 </template>

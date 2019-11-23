@@ -43,18 +43,18 @@ export default {
             return { width, height };
         },
         d3ArrayTree() {
+
             return buildLayout(this.tree, this.d3LeafSize);
         },
         arrayTree() {
+            // https://github.com/klortho/d3-flextree
             const layout = this.d3ArrayTree;
-            // extents is the max size
-            const { extents } = layout;
-            const topShit = Math.abs(extents.left);
             const nodes = [];
             layout.each((d3Node) => {
                 const { children, size, ...data } = d3Node.data;
                 nodes.push({
                     _id: `${d3Node.x}-${d3Node.y}`,
+                    parent: d3Node.parent,
                     xSize: d3Node.xSize,
                     ySize: d3Node.ySize,
                     x: d3Node.x,
@@ -62,19 +62,12 @@ export default {
                     data,
                 });
             });
-            return {
-                topShit,
-                extents,
-                width: Math.abs(extents.left) + Math.abs(extents.right),
-                height: Math.abs(extents.top) + Math.abs(extents.bottom),
-                nodes,
-            };
+            return nodes
         },
         dimensions() {
             const { extents } = this.d3ArrayTree;
-            const { nodes } = this.arrayTree;
-            const scaleWitdhFactor = getScaleFactor(`y`, nodes);
-            const scaleHeightFactor = getScaleFactor(`x`, nodes);
+            const scaleWitdhFactor = getScaleFactor(`y`, this.arrayTree);
+            const scaleHeightFactor = getScaleFactor(`x`, this.arrayTree);
             const extendWidth = Math.abs(extents.top) + Math.abs(extents.bottom);
             const extendHeight = Math.abs(extents.left) + Math.abs(extents.right);
             return {
@@ -106,7 +99,7 @@ export default {
         </aside>
         <div class="tree" :style="treeStyle">
             <decision-tree-item
-                v-for="node in arrayTree.nodes"
+                v-for="node in arrayTree"
                 :key="node._id"
                 :node="node"
                 :scale-col-factor="dimensions.scaleWitdhFactor"
@@ -119,19 +112,19 @@ export default {
             </decision-tree-item>
         </div>
         <!-- <div class="tree">
-    <aside class="connectors">
-      <ol
-        class="connectors__section"
-        v-for="(section, sectionIndex) in arrayTree"
-        :key="`connectors-${sectionIndex}`"
-      >
-        <li class="connectors__item" v-for="leaf in section" :key="`connector-${leaf.id}`">
-          <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="connectors__lines">
-            <path class="connectors__line connectors__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
-            <path class="connectors__line connectors__line--no" d="M 0,6  C 1,6 1,9 2,9" />
-          </svg>
-        </li>
-      </ol>
+            <aside class="connectors">
+            <ol
+                class="connectors__section"
+                v-for="(section, sectionIndex) in arrayTree"
+                :key="`connectors-${sectionIndex}`"
+            >
+                <li class="connectors__item" v-for="leaf in section" :key="`connector-${leaf.id}`">
+                <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="connectors__lines">
+                    <path class="connectors__line connectors__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
+                    <path class="connectors__line connectors__line--no" d="M 0,6  C 1,6 1,9 2,9" />
+                </svg>
+                </li>
+            </ol>
         </aside>-->
     </section>
 </template>
