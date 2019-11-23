@@ -22,7 +22,7 @@ export function treeToArray(level, index = 0, result = []) {
 
 const layout = flextree();
 
-export function buildTreeForD3Layout(node) {
+export function buildTreeForD3Layout(node, [xSize, ySize] = [1, 1]) {
   const isLastResult = node.left == null && node.right == null;
   const data = isLastResult
     ? {
@@ -34,7 +34,7 @@ export function buildTreeForD3Layout(node) {
         samples: node.samples
       };
   const computedNode = {
-    size: [4, 4],
+    size: [xSize, ySize],
     isLastResult,
     ...data
   };

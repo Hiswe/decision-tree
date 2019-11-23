@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "d3-flextree": "^2.1.1",
+    "lodash.flow": "^3.5.0",
     "vue": "^2.6.10",
     "vue-hot-reload-api": "^2.3.4"
   }

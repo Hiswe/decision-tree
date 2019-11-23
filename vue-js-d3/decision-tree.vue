@@ -1,19 +1,53 @@
 <script>
+import flow from "lodash.flow";
+
 import { buildLayout } from "../vanilla-js/data-parser.js";
+import DecisionTreeItem from "./decision-tree-item.vue";
 
 const formatPercent = new Intl.NumberFormat(`en`, {
   style: `percent`,
   minimumFractionDigits: 2
 }).format;
 
+function filterInteger(value) {
+  return !Number.isInteger(value);
+}
+function cutIntegerPart(value) {
+  value = Math.abs(value);
+  return value - Math.trunc(value);
+}
+function unicValues(array) {
+  return [...new Set(array)];
+}
+
+const getScaleFactor = flow(
+  (key, array) => array.map(node => node[key]),
+  array => array.filter(filterInteger),
+  array => array.map(cutIntegerPart),
+  array => unicValues(array),
+  array => 1 / array.reduce((acc, value) => acc * value, 1)
+);
+
 export default {
   name: `decistion-tree`,
+  components: { DecisionTreeItem },
   props: {
     tree: { type: Object, required: true }
   },
+  data() {
+    return { d3LeafSize: [1, 2] };
+  },
   computed: {
+    leafSize() {
+      const [width, height] = this.d3LeafSize;
+      return { width, height };
+    },
+    d3ArrayTree() {
+      return buildLayout(this.tree, this.d3LeafSize);
+    },
     arrayTree() {
-      const layout = buildLayout(this.tree);
+      const layout = this.d3ArrayTree;
+      // extents is the max size
       const { extents } = layout;
       const topShit = Math.abs(extents.left);
       const nodes = [];
@@ -21,34 +55,42 @@ export default {
         const { children, size, ...data } = node.data;
         nodes.push({
           _id: `${node.x}-${node.y}`,
-          rowStart: node.x + topShit - 1,
-          colStart: node.y + 1,
           xSize: node.xSize,
           ySize: node.ySize,
-          // colEnd: node.x + topShit + node.xSize,
-          // rowEnd: node.y + node.ySize,
-          // x: node.x,
-          // y: node.y,
-          // height: node.height,
-          // top: node.top,
-          // bottom: node.bottom,
-          // left: node.left,
-          // right: node.right,
+          x: node.x,
+          y: node.y,
           data
         });
       });
       return {
         topShit,
+        extents,
         width: Math.abs(extents.left) + Math.abs(extents.right),
         height: Math.abs(extents.top) + Math.abs(extents.bottom),
         nodes
       };
     },
+    dimensions() {
+      const { extents } = this.d3ArrayTree;
+      const { nodes } = this.arrayTree;
+      const scaleWitdhFactor = getScaleFactor(`y`, nodes);
+      const scaleHeightFactor = getScaleFactor(`x`, nodes);
+      const extendWidth = Math.abs(extents.top) + Math.abs(extents.bottom);
+      const extendHeight = Math.abs(extents.left) + Math.abs(extents.right);
+      return {
+        extents,
+        topShit: Math.abs(extents.left),
+        scaleWitdhFactor,
+        scaleHeightFactor,
+        extendWidth,
+        extendHeight,
+        columns: Math.round(extendWidth * scaleWitdhFactor),
+        rows: Math.round(extendHeight * scaleHeightFactor)
+      };
+    },
     treeStyle() {
       return {
-        "grid-template-rows": `repeat(${this.arrayTree.width}, minmax(0, 1fr))`,
-        "grid-template-columns": `repeat(${this.arrayTree.height}, minmax(0, 1fr))`
-        // "--tree-column-width": formatPercent(1 / this.arrayTree.length)
+        "grid-template-columns": `repeat(${this.dimensions.columns}, minmax(0, 1fr))`
       };
     }
   }
@@ -58,25 +100,19 @@ export default {
 <template>
   <section class="decision-tree">
     <aside class="decision-tree__aside">
-      width: {{arrayTree.width}}
+      columns: {{dimensions.columns}}
       <br />
-      height: {{arrayTree.height}}
+      rows: {{dimensions.rows}}
     </aside>
     <div class="tree" :style="treeStyle">
-      <div
-        class="tree__pouic"
-        :class="{'tree__pouic--leaf': node.data.isLastResult}"
+      <decision-tree-item
         v-for="node in arrayTree.nodes"
         :key="node._id"
-        :style="{
-          'grid-column': `${node.colStart} / span ${node.xSize}`,
-          'grid-row': `${node.rowStart} / span ${node.ySize}`,
-        }"
-      >
-        <strong>{{node._id}}</strong>
-        <br />
-        {{ node.data.text || `avg. value: ${node.data.value}`}}
-      </div>
+        :node="node"
+        :scale-col-factor="dimensions.scaleWitdhFactor"
+        :scale-row-factor="dimensions.scaleHeightFactor"
+        :top-shit="dimensions.topShit"
+      />
     </div>
     <!-- <div class="tree">
     <aside class="connectors">
@@ -98,13 +134,14 @@ export default {
 
 <style lang="scss" scoped>
 .decision-tree {
-  --tree-gutter: 1rem;
+  --tree-gutter: 0 1rem;
   --tree-yes: hsl(81, 44%, 50%);
   --tree-no: #b93c3c;
   --tree-decision-background: rgb(126, 198, 226);
   --tree-result-background: orange;
 
   position: relative;
+  padding: 5rem 0 0;
 }
 .decision-tree__aside {
   position: absolute;
@@ -120,15 +157,10 @@ export default {
   display: grid;
   // min-height: 100vh;
   grid-template-rows: repeat(5, minmax(0, 1fr));
-  grid-gap: 1rem 2rem;
+  grid-gap: 0 3rem;
   padding: 1rem;
 }
-.tree__pouic {
-  outline: 1px solid blue;
-}
-.tree__pouic--leaf {
-  outline: 1px solid red;
-}
+
 .tree__section {
   display: flex;
   flex-direction: column;
