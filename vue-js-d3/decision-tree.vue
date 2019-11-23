@@ -51,14 +51,14 @@ export default {
       const { extents } = layout;
       const topShit = Math.abs(extents.left);
       const nodes = [];
-      layout.each(node => {
-        const { children, size, ...data } = node.data;
+      layout.each(d3Node => {
+        const { children, size, ...data } = d3Node.data;
         nodes.push({
-          _id: `${node.x}-${node.y}`,
-          xSize: node.xSize,
-          ySize: node.ySize,
-          x: node.x,
-          y: node.y,
+          _id: `${d3Node.x}-${d3Node.y}`,
+          xSize: d3Node.xSize,
+          ySize: d3Node.ySize,
+          x: d3Node.x,
+          y: d3Node.y,
           data
         });
       });
@@ -112,7 +112,11 @@ export default {
         :scale-col-factor="dimensions.scaleWitdhFactor"
         :scale-row-factor="dimensions.scaleHeightFactor"
         :top-shit="dimensions.topShit"
-      />
+      >
+        <strong>{{node._id}}</strong>
+        <br />
+        {{ node.data.text || `avg. value: ${node.data.value}`}}
+      </decision-tree-item>
     </div>
     <!-- <div class="tree">
     <aside class="connectors">
@@ -220,28 +224,28 @@ export default {
   transform: translateX(100%);
   position: relative;
 }
-.connectors__lines {
-  position: absolute;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  height: 100%;
-}
-.connectors__line {
-  stroke-width: 1.5;
-  stroke: black;
-  fill: none;
-  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect
-  // https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke
-  // https://stackoverflow.com/a/1304602
-  vector-effect: non-scaling-stroke;
-}
-.connectors__line--yes {
-  stroke: var(--tree-yes);
-}
-.connectors__line--no {
-  stroke: var(--tree-no);
-}
+// .connectors__lines {
+//   position: absolute;
+//   width: 100%;
+//   top: 0;
+//   bottom: 0;
+//   height: 100%;
+// }
+// .connectors__line {
+//   stroke-width: 1.5;
+//   stroke: black;
+//   fill: none;
+//   // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect
+//   // https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke
+//   // https://stackoverflow.com/a/1304602
+//   vector-effect: non-scaling-stroke;
+// }
+// .connectors__line--yes {
+//   stroke: var(--tree-yes);
+// }
+// .connectors__line--no {
+//   stroke: var(--tree-no);
+// }
 .connectors__section:last-child {
   // keep the last section to be rightfully positioned
   visibility: hidden;

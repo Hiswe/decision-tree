@@ -8,8 +8,8 @@ export default {
     scaleRowFactor: { type: Number, default: 1 }
   },
   computed: {
-    componentClasses() {
-      return { "tree__pouic--leaf": this.node.data.isLastResult };
+    nodeClasses() {
+      return { "decision-tree-item__node--end": this.node.data.isLastResult };
     },
     position() {
       const { node, topShit, scaleColFactor, scaleRowFactor } = this;
@@ -19,10 +19,17 @@ export default {
       const colSize = Math.round(node.ySize * scaleColFactor);
       return { colStart, colSize, rowStart, rowSize };
     },
-    componentStyles() {
+    nodeStyles() {
       const { position } = this;
       return {
         "grid-column": `${position.colStart} / span ${position.colSize}`,
+        "grid-row": `${position.rowStart} / span ${position.rowSize}`
+      };
+    },
+    lineStyles() {
+      const { position } = this;
+      return {
+        "grid-column": `${position.colStart + 1} / span ${position.colSize}`,
         "grid-row": `${position.rowStart} / span ${position.rowSize}`
       };
     }
@@ -31,19 +38,54 @@ export default {
 </script>
 
 <template>
-  <div class="tree__pouic" :class="componentClasses" :style="componentStyles">
-    <strong>{{node._id}}</strong>
-    <br />
-    {{ node.data.text || `avg. value: ${node.data.value}`}}
+  <div class="decision-tree-item" >
+    <div class="decision-tree-item__node" :class="nodeClasses" :style="nodeStyles">
+      <slot />
+    </div>
+    <!-- <div class="decision-tree-item__link" :style="lineStyles">
+    </div> -->
+    <!-- <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="decision-tree-item__lines">
+      <path class="decision-tree-item__line decision-tree-item__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
+      <path class="decision-tree-item__line decision-tree-item__line--no" d="M 0,6  C 1,6 1,9 2,9" />
+    </svg> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
-.tree__pouic {
+.decision-tree-item {
+  display: contents;
+}
+.decision-tree-item__node {
   margin: 1rem 0;
   outline: 1px solid blue;
+  align-self: center;
 }
-.tree__pouic--leaf {
-  outline: 1px solid red;
+.decision-tree-item__node--end {
+  outline: 1px solid purple;
+}
+.decision-tree-item__link {
+  background: rgba(0,100,255, 0.2 );
+}
+.decision-tree-item__lines {
+  // position: absolute;
+  // width: 100%;
+  // top: 0;
+  // bottom: 0;
+  // height: 100%;
+}
+.decision-tree-item__line {
+  stroke-width: 1.5;
+  stroke: black;
+  fill: none;
+  // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect
+  // https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke
+  // https://stackoverflow.com/a/1304602
+  vector-effect: non-scaling-stroke;
+}
+.decision-tree-item__line--yes {
+  stroke: var(--tree-yes);
+}
+.decision-tree-item__line--no {
+  stroke: var(--tree-no);
 }
 </style>
