@@ -70,7 +70,7 @@ export default {
             const extendHeight = Math.abs(extents.left) + Math.abs(extents.right);
             return {
                 extents,
-                topShit: Math.abs(extents.left),
+                topShit: Math.abs(extents.left) * scaleHeightFactor,
                 scaleWitdhFactor,
                 scaleHeightFactor,
                 extendWidth,
@@ -135,8 +135,10 @@ export default {
     --tree-decision-background: rgb(126, 198, 226);
     --tree-result-background: orange;
 
+
+
     position: relative;
-    padding: 5rem 0 0;
+    padding: 5rem 1rem 1rem;
 }
 .decision-tree__aside {
     position: absolute;
@@ -153,7 +155,8 @@ export default {
     // min-height: 100vh;
     grid-template-rows: repeat(5, minmax(0, 1fr));
     grid-gap: 0 var(--tree-column-gutter);
-    padding: 1rem;
+    // padding: 1rem;
+    outline: 1px solid grey;
 }
 
 .tree__section {

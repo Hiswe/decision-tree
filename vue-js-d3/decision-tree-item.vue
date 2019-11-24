@@ -56,15 +56,19 @@ export default {
             };
         },
     },
+    mounted() {
+        this.computeLinkSize();
+    },
     methods: {
         getGridPosition(d3Node) {
             const { topShit, scaleColFactor, scaleRowFactor } = this;
-            const rowStart = Math.round((d3Node.x + topShit) * scaleRowFactor - 1);
+            const rowStart = Math.round((d3Node.x + topShit) * scaleRowFactor);
             const rowSize = Math.round(d3Node.xSize * scaleRowFactor);
             const colStart = Math.round(d3Node.y * scaleColFactor + 1);
             const colSize = Math.round(d3Node.ySize * scaleColFactor);
             return { colStart, colSize, rowStart, rowSize };
         },
+        computeLinkSize() {},
     },
 };
 </script>
@@ -83,7 +87,7 @@ export default {
             <svg viewBox="0 0 2 2" preserveAspectRatio="none" class="decision-tree-item__lines">
                 <!-- https://css-tricks.com/svg-path-syntax-illustrated-guide/ -->
                 <path
-                class="decision-tree-item__line decision-tree-item__line--yes"
+                    class="decision-tree-item__line decision-tree-item__line--yes"
                     stroke="black"
                     stroke-width="1"
                     fill="none"
@@ -97,7 +101,7 @@ export default {
                     d="M 0,6  C 1,6 1,3 2,3"
                     :class="lineClasses"
                 />
-            </svg> -->
+            </svg>-->
         </div>
     </div>
 </template>
