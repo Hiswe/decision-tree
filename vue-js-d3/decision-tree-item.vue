@@ -1,4 +1,14 @@
 <script>
+function getElementHeight($el) {
+    const height = $el.offsetHeight;
+    const computedStyles = getComputedStyle($el, null);
+    const margins = [`marginTop`, `marginBottom`]
+        .map((cssProperty) => computedStyles[cssProperty])
+        .map((cssValue) => Number.parseInt(cssValue, 10))
+        .reduce((acc, value) => acc + value, 0);
+    return height + margins;
+}
+
 export default {
     name: `decision-tree-item`,
     props: {
@@ -23,11 +33,11 @@ export default {
             if (this.isRoot) return false;
             return this.parentPosition.rowStart - this.position.rowStart > 0;
         },
-        nodeClasses() {
+        nodeContentClasses() {
             return {
-                'decision-tree-item__node--no': !this.isParentLower,
-                'decision-tree-item__node--root': this.isRoot,
-                'decision-tree-item__node--end': this.node.data.isLastResult,
+                'decision-tree-item__node-content--no': !this.isParentLower,
+                'decision-tree-item__node-content--root': this.isRoot,
+                'decision-tree-item__node-content--end': this.node.data.isLastResult,
             };
         },
         nodeStyles() {
@@ -68,15 +78,27 @@ export default {
             const colSize = Math.round(d3Node.ySize * scaleColFactor);
             return { colStart, colSize, rowStart, rowSize };
         },
-        computeLinkSize() {},
+        // we can't get the real height of the boxes until they are in the DOM
+        computeLinkSize() {
+            if (this.isRoot) return false;
+            const parentNode = document.getElementById(this.node.parentId);
+            const currentNode = document.getElementById(this.node._id);
+            const parentNodeHeight = getElementHeight(parentNode) / 2;
+            const currentNodeHeight = getElementHeight(currentNode) / 2;
+            this.$refs.lines.style.height = `calc(100% - ${currentNodeHeight + parentNodeHeight}px)`;
+            this.$refs.lines.style.top = `${currentNodeHeight}px`;
+            this.$refs.lines.style.bottom = `${parentNodeHeight}px`;
+        },
     },
 };
 </script>
 
 <template>
     <div class="decision-tree-item">
-        <div class="decision-tree-item__node" :class="nodeClasses" :style="nodeStyles">
-            <slot />
+        <div class="decision-tree-item__node" :style="nodeStyles" :id="node._id">
+            <div class="decision-tree-item__node-content" :class="nodeContentClasses">
+                <slot />
+            </div>
         </div>
         <div
             class="decision-tree-item__link"
@@ -84,7 +106,12 @@ export default {
             :class="{'decision-tree-item__link--no': !isParentLower,}"
             v-if="!isRoot"
         >
-            <svg viewBox="0 0 2 2" preserveAspectRatio="none" class="decision-tree-item__lines">
+            <svg
+                viewBox="0 0 2 2"
+                preserveAspectRatio="none"
+                class="decision-tree-item__lines"
+                ref="lines"
+            >
                 <!-- https://css-tricks.com/svg-path-syntax-illustrated-guide/ -->
                 <path
                     class="decision-tree-item__line decision-tree-item__line--yes"
@@ -95,13 +122,6 @@ export default {
                     :class="lineClasses"
                 />
             </svg>
-            <!-- <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="decision-tree-item__lines">
-                <path
-                    class="decision-tree-item__line decision-tree-item__line--yes"
-                    d="M 0,6  C 1,6 1,3 2,3"
-                    :class="lineClasses"
-                />
-            </svg>-->
         </div>
     </div>
 </template>
@@ -112,25 +132,30 @@ export default {
 }
 .decision-tree-item__node {
     margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    outline: 1px solid pink;
+}
+.decision-tree-item__node-content {
     outline: 1px solid;
     align-self: center;
+    width: 100%;
 }
-
-.decision-tree-item__node--no {
+.decision-tree-item__node-content--no {
     outline: 1px solid red;
 }
-.decision-tree-item__node--end {
+.decision-tree-item__node-content--end {
     outline: 1px solid purple;
 }
-.decision-tree-item__node--root {
+.decision-tree-item__node-content--root {
     outline: 1px solid black;
     background: black;
     color: white;
 }
 .decision-tree-item__link {
-    // background: rgba(0, 100, 255, 0.1);
     position: relative;
     transform-origin: center center;
+    pointer-events: none;
 }
 .decision-tree-item__link--no {
     // background: rgba(255, 50, 0, 0.1);
@@ -145,7 +170,7 @@ export default {
     top: 2rem;
     bottom: 2rem;
     height: calc(100% - 4rem);
-    background: rgba(0, 0, 0, 0.2);
+    // background: rgba(0, 0, 0, 0.2);
 
     > path {
         vector-effect: non-scaling-stroke;

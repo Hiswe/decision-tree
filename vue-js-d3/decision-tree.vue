@@ -50,9 +50,13 @@ export default {
             const nodes = [];
             layout.each((d3Node) => {
                 const { children, size, ...data } = d3Node.data;
+                const currentIndex = nodes.length
                 nodes.push({
                     _id: `${d3Node.x}-${d3Node.y}`,
+                    currentIndex,
                     parent: d3Node.parent,
+                    parentId: d3Node.parent ? `${d3Node.parent.x}-${d3Node.parent.y}` : false,
+                    // parentIndex: nodes.findIndex(previousNodes => previousNodes)
                     xSize: d3Node.xSize,
                     ySize: d3Node.ySize,
                     x: d3Node.x,
@@ -95,7 +99,7 @@ export default {
             <br />
             rows: {{dimensions.rows}}
         </aside>
-        <div class="tree" :style="treeStyle">
+        <div class="decision-tree__content" :style="treeStyle">
             <decision-tree-item
                 v-for="node in arrayTree"
                 :key="node._id"
@@ -135,8 +139,6 @@ export default {
     --tree-decision-background: rgb(126, 198, 226);
     --tree-result-background: orange;
 
-
-
     position: relative;
     padding: 5rem 1rem 1rem;
 }
@@ -145,107 +147,11 @@ export default {
     top: 1rem;
     left: 1rem;
 }
-
-//
-// TREE
-//
-
-.tree {
+.decision-tree__content {
     display: grid;
-    // min-height: 100vh;
     grid-template-rows: repeat(5, minmax(0, 1fr));
     grid-gap: 0 var(--tree-column-gutter);
-    // padding: 1rem;
     outline: 1px solid grey;
 }
 
-.tree__section {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    flex: 0 0 var(--tree-column-width);
-    width: var(--tree-column-width);
-    list-style: none;
-    margin: 0;
-    padding: 0 var(--tree-gutter);
-}
-.tree__leaf {
-    padding: 0.5rem;
-    background: var(--tree-decision-background);
-    text-align: center;
-}
-.tree__section:last-child .tree__leaf {
-    background: var(--tree-result-background);
-}
-.tree__section:last-child .tree__leaf:nth-child(odd) {
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
-}
-.tree__section:last-child .tree__leaf:nth-child(even) {
-    margin-top: 0.25rem;
-    margin-bottom: 1rem;
-}
-
-//
-// CONNECTORS
-//
-
-.connectors {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    pointer-events: none;
-    overflow: hidden;
-    margin: 0;
-}
-.connectors__section {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    flex: 0 0 var(--tree-column-width);
-    width: var(--tree-column-width);
-    margin: 0;
-    padding: 0 var(--tree-gutter);
-    list-style: none;
-    align-items: flex-end;
-}
-.connectors__item {
-    flex: 1 0 auto;
-    width: calc(var(--tree-gutter) * 2);
-    transform: translateX(100%);
-    position: relative;
-}
-// .connectors__lines {
-//   position: absolute;
-//   width: 100%;
-//   top: 0;
-//   bottom: 0;
-//   height: 100%;
-// }
-// .connectors__line {
-//   stroke-width: 1.5;
-//   stroke: black;
-//   fill: none;
-//   // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect
-//   // https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke
-//   // https://stackoverflow.com/a/1304602
-//   vector-effect: non-scaling-stroke;
-// }
-// .connectors__line--yes {
-//   stroke: var(--tree-yes);
-// }
-// .connectors__line--no {
-//   stroke: var(--tree-no);
-// }
-.connectors__section:last-child {
-    // keep the last section to be rightfully positioned
-    visibility: hidden;
-}
-.connectors__section:nth-last-child(2) .connectors__item {
-    margin-top: 0.66rem;
-    margin-bottom: 0.66rem;
-}
 </style>
