@@ -50,13 +50,13 @@ export default {
             const nodes = [];
             layout.each((d3Node) => {
                 const { children, size, ...data } = d3Node.data;
-                const currentIndex = nodes.length
+                const currentIndex = nodes.length;
                 nodes.push({
                     _id: `${d3Node.x}-${d3Node.y}`,
                     currentIndex,
+                    node: d3Node,
                     parent: d3Node.parent,
-                    parentId: d3Node.parent ? `${d3Node.parent.x}-${d3Node.parent.y}` : false,
-                    // parentIndex: nodes.findIndex(previousNodes => previousNodes)
+                    parentIndex: nodes.findIndex((previousNodes) => previousNodes.node === d3Node.parent),
                     xSize: d3Node.xSize,
                     ySize: d3Node.ySize,
                     x: d3Node.x,
@@ -64,7 +64,7 @@ export default {
                     data,
                 });
             });
-            return nodes
+            return nodes;
         },
         dimensions() {
             const { extents } = this.d3ArrayTree;
@@ -113,21 +113,6 @@ export default {
                 {{ node.data.text || `avg. value: ${node.data.value}`}}
             </decision-tree-item>
         </div>
-        <!-- <div class="tree">
-            <aside class="connectors">
-            <ol
-                class="connectors__section"
-                v-for="(section, sectionIndex) in arrayTree"
-                :key="`connectors-${sectionIndex}`"
-            >
-                <li class="connectors__item" v-for="leaf in section" :key="`connector-${leaf.id}`">
-                <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="connectors__lines">
-                    <path class="connectors__line connectors__line--yes" d="M 0,6  C 1,6 1,3 2,3" />
-                    <path class="connectors__line connectors__line--no" d="M 0,6  C 1,6 1,9 2,9" />
-                </svg>
-                </li>
-            </ol>
-        </aside>-->
     </section>
 </template>
 
@@ -153,5 +138,4 @@ export default {
     grid-gap: 0 var(--tree-column-gutter);
     outline: 1px solid grey;
 }
-
 </style>

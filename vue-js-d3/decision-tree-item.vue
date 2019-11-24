@@ -69,11 +69,14 @@ export default {
         },
     },
     created() {
+        // TODO: maybe improve with
+        // https://www.vuescript.com/vue-directive-window-resize-events/
         this.computeLinkSize = debounce(this.computeLinkSize, 50);
     },
     mounted() {
         window.requestAnimationFrame(() => this.computeLinkSize());
         window.addEventListener(`resize`, this.computeLinkSize);
+        // console.log(this.getWrapper)
     },
     beforeDestroy() {
         window.removeEventListener(`resize`, this.computeLinkSize);
@@ -90,9 +93,10 @@ export default {
         // we can't get the real height of the boxes until they are in the DOM
         computeLinkSize() {
             if (this.isRoot) return false;
-            const { isParentLower } = this;
-            const parentNode = document.getElementById(this.node.parentId);
-            const currentNode = document.getElementById(this.node._id);
+            const { isParentLower, node } = this;
+            const $treeRoot = this.$el.parentNode
+            const parentNode = $treeRoot.querySelector(`.decision-tree-item:nth-child(${node.parentIndex + 1}) .decision-tree-item__node`);
+            const currentNode = this.$el.querySelector(`.decision-tree-item__node`);
             const parentNodeHeight = getElementHeight(parentNode) / 2;
             const currentNodeHeight = getElementHeight(currentNode) / 2;
             const { svg } = this.$refs;
@@ -106,7 +110,7 @@ export default {
 
 <template>
     <div class="decision-tree-item">
-        <div class="decision-tree-item__node" :style="nodeStyles" :id="node._id">
+        <div class="decision-tree-item__node" :style="nodeStyles">
             <div class="decision-tree-item__node-content" :class="nodeContentClasses">
                 <slot />
             </div>
@@ -142,7 +146,7 @@ export default {
     display: contents;
 }
 .decision-tree-item__node {
-    margin: 1rem 0;
+    margin: .5rem 0;
     display: flex;
     align-items: center;
     outline: 1px solid pink;
@@ -179,10 +183,6 @@ export default {
     top: 0;
     bottom: 0;
     height: 100%;
-
-    > path {
-        vector-effect: non-scaling-stroke;
-    }
 }
 .decision-tree-item__line {
     stroke-width: 1.5;
