@@ -41,11 +41,12 @@ export default {
         lineStyles() {
             if (this.isRoot) return false;
             const { position, parentPosition, isParentLower } = this;
+            const rowStart = Math.min(position.rowStart, parentPosition.rowStart);
+            const rowEnd = Math.max(position.rowStart, parentPosition.rowStart) + position.rowSize;
             return {
                 'transform': `scaleY(${isParentLower ? 1 : -1})`,
-                'grid-column': `${parentPosition.colStart} / span ${position.colSize * 2}`,
-                'grid-row': `${isParentLower ? position.rowStart : parentPosition.rowStart} / span ${position.rowSize *
-                    2}`,
+                'grid-column': `${parentPosition.colStart} / ${position.colStart + position.colSize}`,
+                'grid-row': `${rowStart} / ${rowEnd}`,
             };
         },
         lineClasses() {
@@ -73,7 +74,12 @@ export default {
         <div class="decision-tree-item__node" :class="nodeClasses" :style="nodeStyles">
             <slot />
         </div>
-        <div class="decision-tree-item__link" :style="lineStyles" v-if="!isRoot">
+        <div
+            class="decision-tree-item__link"
+            :style="lineStyles"
+            :class="{'decision-tree-item__link--no': !isParentLower,}"
+            v-if="!isRoot"
+        >
             <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="decision-tree-item__lines">
                 <path
                     class="decision-tree-item__line decision-tree-item__line--yes"
@@ -95,20 +101,25 @@ export default {
     outline: 1px solid;
     align-self: center;
 }
-.decision-tree-item__node--root {
-    outline: 1px solid black;
-    background: black;
-    color: white;
-}
+
 .decision-tree-item__node--no {
     outline: 1px solid red;
 }
 .decision-tree-item__node--end {
     outline: 1px solid purple;
 }
+.decision-tree-item__node--root {
+    outline: 1px solid black;
+    background: black;
+    color: white;
+}
 .decision-tree-item__link {
-    background: rgba(0, 100, 255, 0.1);
+    // background: rgba(0, 100, 255, 0.1);
     position: relative;
+    transform-origin: center center;
+}
+.decision-tree-item__link--no {
+    // background: rgba(255, 50, 0, 0.1);
 }
 .decision-tree-item__lines {
     position: absolute;
@@ -118,6 +129,7 @@ export default {
     top: 0;
     bottom: 0;
     height: 100%;
+    background: rgba(0, 0, 0, 0.2);
 }
 .decision-tree-item__line {
     stroke-width: 1.5;
