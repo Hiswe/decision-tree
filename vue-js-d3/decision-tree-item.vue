@@ -80,14 +80,24 @@ export default {
             :class="{'decision-tree-item__link--no': !isParentLower,}"
             v-if="!isRoot"
         >
-            <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="decision-tree-item__lines">
+            <svg viewBox="0 0 2 2" preserveAspectRatio="none" class="decision-tree-item__lines">
+                <!-- https://css-tricks.com/svg-path-syntax-illustrated-guide/ -->
+                <path
+                class="decision-tree-item__line decision-tree-item__line--yes"
+                    stroke="black"
+                    stroke-width="1"
+                    fill="none"
+                    d="M 0,2 C 1,2 1,0 2,0"
+                    :class="lineClasses"
+                />
+            </svg>
+            <!-- <svg viewBox="0 0 2 12" preserveAspectRatio="none" class="decision-tree-item__lines">
                 <path
                     class="decision-tree-item__line decision-tree-item__line--yes"
                     d="M 0,6  C 1,6 1,3 2,3"
                     :class="lineClasses"
                 />
-                <!-- <path class="decision-tree-item__line decision-tree-item__line--no" d="M 0,6  C 1,6 1,9 2,9" /> -->
-            </svg>
+            </svg> -->
         </div>
     </div>
 </template>
@@ -126,10 +136,16 @@ export default {
     width: var(--tree-column-gutter);
     transform: translateX(-50%);
     left: 50%;
-    top: 0;
-    bottom: 0;
-    height: 100%;
+    // top: 0;
+    // bottom: 0;
+    top: 2rem;
+    bottom: 2rem;
+    height: calc(100% - 4rem);
     background: rgba(0, 0, 0, 0.2);
+
+    > path {
+        vector-effect: non-scaling-stroke;
+    }
 }
 .decision-tree-item__line {
     stroke-width: 1.5;
