@@ -1,4 +1,6 @@
 <script>
+import debounce from 'lodash.debounce';
+
 function getElementHeight($el) {
     const height = $el.offsetHeight;
     const computedStyles = getComputedStyle($el, null);
@@ -66,8 +68,15 @@ export default {
             };
         },
     },
+    created() {
+        this.computeLinkSize = debounce(this.computeLinkSize, 50);
+    },
     mounted() {
-        this.computeLinkSize();
+        window.requestAnimationFrame(() => this.computeLinkSize());
+        window.addEventListener(`resize`, this.computeLinkSize);
+    },
+    beforeDestroy() {
+        window.removeEventListener(`resize`, this.computeLinkSize);
     },
     methods: {
         getGridPosition(d3Node) {
@@ -81,13 +90,15 @@ export default {
         // we can't get the real height of the boxes until they are in the DOM
         computeLinkSize() {
             if (this.isRoot) return false;
+            const { isParentLower } = this;
             const parentNode = document.getElementById(this.node.parentId);
             const currentNode = document.getElementById(this.node._id);
             const parentNodeHeight = getElementHeight(parentNode) / 2;
             const currentNodeHeight = getElementHeight(currentNode) / 2;
-            this.$refs.lines.style.height = `calc(100% - ${currentNodeHeight + parentNodeHeight}px)`;
-            this.$refs.lines.style.top = `${currentNodeHeight}px`;
-            this.$refs.lines.style.bottom = `${parentNodeHeight}px`;
+            const { svg } = this.$refs;
+            svg.style.height = `calc(100% - ${currentNodeHeight + parentNodeHeight}px)`;
+            svg.style.top = `${isParentLower ? currentNodeHeight : parentNodeHeight}px`;
+            svg.style.bottom = `${isParentLower ? parentNodeHeight : currentNodeHeight}px`;
         },
     },
 };
@@ -109,8 +120,8 @@ export default {
             <svg
                 viewBox="0 0 2 2"
                 preserveAspectRatio="none"
-                class="decision-tree-item__lines"
-                ref="lines"
+                class="decision-tree-item__svg"
+                ref="svg"
             >
                 <!-- https://css-tricks.com/svg-path-syntax-illustrated-guide/ -->
                 <path
@@ -160,17 +171,14 @@ export default {
 .decision-tree-item__link--no {
     // background: rgba(255, 50, 0, 0.1);
 }
-.decision-tree-item__lines {
+.decision-tree-item__svg {
     position: absolute;
     width: var(--tree-column-gutter);
     transform: translateX(-50%);
     left: 50%;
-    // top: 0;
-    // bottom: 0;
-    top: 2rem;
-    bottom: 2rem;
-    height: calc(100% - 4rem);
-    // background: rgba(0, 0, 0, 0.2);
+    top: 0;
+    bottom: 0;
+    height: 100%;
 
     > path {
         vector-effect: non-scaling-stroke;
