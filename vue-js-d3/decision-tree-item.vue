@@ -103,7 +103,6 @@ export default {
         <div
             class="decision-tree-item__link"
             :style="lineStyles"
-            :class="{'decision-tree-item__link--no': !isParentLower,}"
             v-if="!isRoot"
         >
             <svg
@@ -114,12 +113,9 @@ export default {
             >
                 <!-- https://css-tricks.com/svg-path-syntax-illustrated-guide/ -->
                 <path
-                    class="decision-tree-item__line decision-tree-item__line--yes"
-                    stroke="black"
-                    stroke-width="1"
-                    fill="none"
-                    d="M 0,2 C 1,2 1,0 2,0"
+                    class="decision-tree-item__line"
                     :class="lineClasses"
+                    d="M 0,2 C 1,2 1,0 2,0"
                 />
             </svg>
         </div>
@@ -141,12 +137,6 @@ export default {
     align-self: center;
     width: 100%;
 }
-.decision-tree-item__node-content--no {
-    outline: 1px solid red;
-}
-.decision-tree-item__node-content--end {
-    outline: 1px solid purple;
-}
 .decision-tree-item__node-content--root {
     outline: 1px solid black;
     background: black;
@@ -157,9 +147,6 @@ export default {
     transform-origin: center center;
     pointer-events: none;
 }
-.decision-tree-item__link--no {
-    // background: rgba(255, 50, 0, 0.1);
-}
 .decision-tree-item__svg {
     position: absolute;
     width: var(--tree-column-gutter);
@@ -168,18 +155,17 @@ export default {
     top: 0;
     bottom: 0;
     height: 100%;
+    // prevent path to be cropped by the viewbox
+    overflow: visible;
 }
 .decision-tree-item__line {
     stroke-width: 1.5;
-    stroke: black;
+    stroke: var(--tree-yes);
     fill: none;
     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/vector-effect
     // https://www.w3.org/TR/SVGTiny12/painting.html#NonScalingStroke
     // https://stackoverflow.com/a/1304602
     vector-effect: non-scaling-stroke;
-}
-.decision-tree-item__line--yes {
-    stroke: var(--tree-yes);
 }
 .decision-tree-item__line--no {
     stroke: var(--tree-no);

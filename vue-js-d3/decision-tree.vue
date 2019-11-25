@@ -119,9 +119,11 @@ export default {
                 ref="treeItems"
                 
             >
-                <strong>{{ node._id }}</strong>
-                <br />
-                {{ node.data.text || `avg. value: ${node.data.value}` }}
+                <div class="decision-tree__node">
+                    <strong>{{ node._id }}</strong>
+                    <br />
+                    {{ node.data.text || `avg. value: ${node.data.value}` }}
+                </div>
             </decision-tree-item>
         </div>
     </section>
@@ -148,5 +150,8 @@ export default {
     grid-template-rows: repeat(5, minmax(0, 1fr));
     grid-gap: 0 var(--tree-column-gutter);
     outline: 1px solid grey;
+}
+.decision-tree__node {
+    padding: .5rem;
 }
 </style>
