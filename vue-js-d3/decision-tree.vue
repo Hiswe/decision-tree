@@ -1,27 +1,9 @@
 <script>
-import flow from 'lodash.flow';
 import resize from 'vue-resize-directive';
 
 import { buildLayout } from '../vanilla-js/data-parser.js';
 import DecisionTreeItem from './decision-tree-item.vue';
-
-function filterInteger(value) {
-    return !Number.isInteger(value);
-}
-function cutIntegerPart(value) {
-    value = Math.abs(value);
-    return value - Math.trunc(value);
-}
-function unicValues(array) {
-    return [...new Set(array)];
-}
-const getScaleFactor = flow(
-    (key, array) => array.map((node) => node[key]),
-    (array) => array.filter(filterInteger),
-    (array) => array.map(cutIntegerPart),
-    (array) => unicValues(array),
-    (array) => 1 / array.reduce((acc, value) => acc * value, 1),
-);
+import { getScaleFactor, buildTreeForVue } from './decistion-tree-helpers.js';
 
 export default {
     name: `decistion-tree`,
@@ -40,6 +22,9 @@ export default {
         },
         d3ArrayTree() {
             return buildLayout(this.tree, this.d3LeafSize);
+        },
+        pouic() {
+            return buildTreeForVue(this.tree);
         },
         arrayTree() {
             // https://github.com/klortho/d3-flextree
@@ -114,7 +99,13 @@ export default {
                 ref="treeItems"
             >
                 <template v-slot:default="slotProps">
-                    <div class="decision-tree__node" :class="{'decision-tree__node--root': slotProps.isRoot, 'decision-tree__node--root': slotProps.isRoot}">
+                    <div
+                        class="decision-tree__node"
+                        :class="{
+                            'decision-tree__node--root': slotProps.isRoot,
+                            'decision-tree__node--root': slotProps.isRoot,
+                        }"
+                    >
                         <strong>{{ slotProps.node._id }}</strong>
                         <br />
                         {{ slotProps.node.data.text || `avg. value: ${slotProps.node.data.value}` }}
@@ -130,9 +121,6 @@ export default {
     --tree-column-gutter: 5rem;
     --tree-yes: hsl(81, 44%, 50%);
     --tree-no: #b93c3c;
-    --tree-decision-background: rgb(126, 198, 226);
-    --tree-result-background: orange;
-
     position: relative;
     padding: 5rem 1rem 1rem;
 }
@@ -149,6 +137,8 @@ export default {
 }
 .decision-tree__node {
     padding: 0.5rem;
+    background: steelblue;
+    color: white;
 }
 .decision-tree__node--root {
     background: black;
