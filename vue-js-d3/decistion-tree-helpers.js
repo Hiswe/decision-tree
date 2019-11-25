@@ -1,8 +1,6 @@
 import flow from 'lodash.flow';
 import { flextree } from 'd3-flextree';
 
-const layout = flextree();
-
 function filterInteger(value) {
     return !Number.isInteger(value);
 }
@@ -33,21 +31,20 @@ function buildTreeDataForD3Layout(node, [xSize, ySize] = [1, 1]) {
     const children = [];
     if (node.left != null) children.push(buildTreeDataForD3Layout(node.left));
     if (node.right != null) children.push(buildTreeDataForD3Layout(node.right));
-
     computedNode.children = children;
-
     return computedNode;
 }
 
-// export function buildLayout(tree) {
-//     return layout(layout.hierarchy(convertDataToTree(tree)));
-// }
+const layout = flextree();
 
-// export function buildD3Layout(tree) {
-//     return layout(layout.hierarchy(buildTreeDataForD3Layout(tree)));
-// }
+export const buildD3Tree = flow(
+    buildTreeDataForD3Layout,
+    layout.hierarchy,
+    layout,
+)
 
-export function flattenD3Layout(d3Layout) {
+
+export function d3LayoutToArray(d3Layout) {
     // https://github.com/klortho/d3-flextree
     const layout = d3Layout;
     const nodes = [];
@@ -70,10 +67,3 @@ export function flattenD3Layout(d3Layout) {
     });
     return nodes;
 }
-
-export const buildTreeForVue = flow(
-    buildTreeDataForD3Layout,
-    layout.hierarchy,
-    layout,
-    flattenD3Layout,
-)

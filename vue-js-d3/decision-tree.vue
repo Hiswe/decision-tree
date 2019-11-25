@@ -3,7 +3,7 @@ import resize from 'vue-resize-directive';
 
 import { buildLayout } from '../vanilla-js/data-parser.js';
 import DecisionTreeItem from './decision-tree-item.vue';
-import { getScaleFactor, buildTreeForVue } from './decistion-tree-helpers.js';
+import { getScaleFactor, buildD3Tree, d3LayoutToArray } from './decistion-tree-helpers.js';
 
 export default {
     name: `decistion-tree`,
@@ -12,23 +12,18 @@ export default {
     props: {
         tree: { type: Object, required: true },
     },
-    data() {
-        return { d3LeafSize: [1, 2] };
-    },
     computed: {
         leafSize() {
             const [width, height] = this.d3LeafSize;
             return { width, height };
         },
-        d3ArrayTree() {
-            return buildLayout(this.tree, this.d3LeafSize);
-        },
-        pouic() {
-            return buildTreeForVue(this.tree);
+        d3Tree() {
+            return buildD3Tree(this.tree);
         },
         arrayTree() {
+            return d3LayoutToArray(this.d3Tree);
             // https://github.com/klortho/d3-flextree
-            const layout = this.d3ArrayTree;
+            const layout = this.d3Tree;
             const nodes = [];
             layout.each((d3Node) => {
                 const { children, size, ...data } = d3Node.data;
@@ -49,7 +44,7 @@ export default {
             return nodes;
         },
         dimensions() {
-            const { extents } = this.d3ArrayTree;
+            const { extents } = this.d3Tree;
             const scaleWitdhFactor = getScaleFactor(`y`, this.arrayTree);
             const scaleHeightFactor = getScaleFactor(`x`, this.arrayTree);
             const extendWidth = Math.abs(extents.top) + Math.abs(extents.bottom);
