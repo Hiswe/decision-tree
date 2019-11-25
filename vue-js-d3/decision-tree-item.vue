@@ -29,13 +29,16 @@ export default {
             const parentPosition = this.getGridPosition(this.node.parent);
             return parentPosition;
         },
-        isParentLower() {
+        isHigher() {
             if (this.isRoot) return false;
             return this.parentPosition.rowStart - this.position.rowStart > 0;
         },
+        isLast() {
+
+        },
         nodeContentClasses() {
             return {
-                'decision-tree-item__node-content--no': !this.isParentLower,
+                'decision-tree-item__node-content--no': !this.isHigher,
                 'decision-tree-item__node-content--root': this.isRoot,
                 'decision-tree-item__node-content--end': this.node.data.isLastResult,
             };
@@ -50,11 +53,11 @@ export default {
 
         lineStyles() {
             if (this.isRoot) return false;
-            const { position, parentPosition, isParentLower } = this;
+            const { position, parentPosition, isHigher } = this;
             const rowStart = Math.min(position.rowStart, parentPosition.rowStart);
             const rowEnd = Math.max(position.rowStart, parentPosition.rowStart) + position.rowSize;
             return {
-                'transform': `scaleY(${isParentLower ? 1 : -1})`,
+                'transform': `scaleY(${isHigher ? 1 : -1})`,
                 'grid-column': `${parentPosition.colStart} / ${position.colStart + position.colSize}`,
                 'grid-row': `${rowStart} / ${rowEnd}`,
             };
@@ -62,7 +65,7 @@ export default {
         lineClasses() {
             if (this.isRoot) return false;
             return {
-                'decision-tree-item__line--no': !this.isParentLower,
+                'decision-tree-item__line--no': !this.isHigher,
             };
         },
     },
@@ -78,7 +81,7 @@ export default {
         // we can't get the real height of the boxes until they are in the DOM
         computeLinkSize() {
             if (this.isRoot) return false;
-            const { isParentLower, node } = this;
+            const { isHigher, node } = this;
             const $treeRoot = this.$el.parentNode
             const parentNode = $treeRoot.querySelector(`.decision-tree-item:nth-child(${node.parentIndex + 1}) .decision-tree-item__node`);
             const currentNode = this.$el.querySelector(`.decision-tree-item__node`);
@@ -86,8 +89,8 @@ export default {
             const currentNodeHeight = getElementHeight(currentNode) / 2;
             const { svg } = this.$refs;
             svg.style.height = `calc(100% - ${currentNodeHeight + parentNodeHeight}px)`;
-            svg.style.top = `${isParentLower ? currentNodeHeight : parentNodeHeight}px`;
-            svg.style.bottom = `${isParentLower ? parentNodeHeight : currentNodeHeight}px`;
+            svg.style.top = `${isHigher ? currentNodeHeight : parentNodeHeight}px`;
+            svg.style.bottom = `${isHigher ? parentNodeHeight : currentNodeHeight}px`;
         },
     },
 };
@@ -97,7 +100,7 @@ export default {
     <div class="decision-tree-item">
         <div class="decision-tree-item__node" :style="nodeStyles">
             <div class="decision-tree-item__node-content" :class="nodeContentClasses">
-                <slot />
+                <slot :node="node" :is-root="isRoot" :is-higher="isHigher" />
             </div>
         </div>
         <div
@@ -130,17 +133,10 @@ export default {
     margin: .5rem 0;
     display: flex;
     align-items: center;
-    outline: 1px solid pink;
 }
 .decision-tree-item__node-content {
-    outline: 1px solid;
     align-self: center;
     width: 100%;
-}
-.decision-tree-item__node-content--root {
-    outline: 1px solid black;
-    background: black;
-    color: white;
 }
 .decision-tree-item__link {
     position: relative;

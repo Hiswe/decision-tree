@@ -5,11 +5,6 @@ import resize from 'vue-resize-directive';
 import { buildLayout } from '../vanilla-js/data-parser.js';
 import DecisionTreeItem from './decision-tree-item.vue';
 
-const formatPercent = new Intl.NumberFormat(`en`, {
-    style: `percent`,
-    minimumFractionDigits: 2,
-}).format;
-
 function filterInteger(value) {
     return !Number.isInteger(value);
 }
@@ -92,12 +87,12 @@ export default {
         },
     },
     methods: {
-        // we need to compute links between node when DOM is ready 
+        // we need to compute links between node when DOM is ready
         // • https://www.vuescript.com/vue-directive-window-resize-events/
         computeLinkSize() {
-            this.$refs.treeItems.forEach(treeItem => treeItem.computeLinkSize())
-        }
-    }
+            this.$refs.treeItems.forEach((treeItem) => treeItem.computeLinkSize());
+        },
+    },
 };
 </script>
 
@@ -117,13 +112,14 @@ export default {
                 :scale-row-factor="dimensions.scaleHeightFactor"
                 :top-shit="dimensions.topShit"
                 ref="treeItems"
-                
             >
-                <div class="decision-tree__node">
-                    <strong>{{ node._id }}</strong>
-                    <br />
-                    {{ node.data.text || `avg. value: ${node.data.value}` }}
-                </div>
+                <template v-slot:default="slotProps">
+                    <div class="decision-tree__node" :class="{'decision-tree__node--root': slotProps.isRoot, 'decision-tree__node--root': slotProps.isRoot}">
+                        <strong>{{ slotProps.node._id }}</strong>
+                        <br />
+                        {{ slotProps.node.data.text || `avg. value: ${slotProps.node.data.value}` }}
+                    </div>
+                </template>
             </decision-tree-item>
         </div>
     </section>
@@ -152,6 +148,10 @@ export default {
     outline: 1px solid grey;
 }
 .decision-tree__node {
-    padding: .5rem;
+    padding: 0.5rem;
+}
+.decision-tree__node--root {
+    background: black;
+    color: white;
 }
 </style>
