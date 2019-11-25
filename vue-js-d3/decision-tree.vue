@@ -1,5 +1,6 @@
 <script>
 import flow from 'lodash.flow';
+import resize from 'vue-resize-directive';
 
 import { buildLayout } from '../vanilla-js/data-parser.js';
 import DecisionTreeItem from './decision-tree-item.vue';
@@ -30,6 +31,7 @@ const getScaleFactor = flow(
 export default {
     name: `decistion-tree`,
     components: { DecisionTreeItem },
+    directives: { resize },
     props: {
         tree: { type: Object, required: true },
     },
@@ -89,17 +91,24 @@ export default {
             };
         },
     },
+    methods: {
+        // we need to compute links between node when DOM is ready 
+        // • https://www.vuescript.com/vue-directive-window-resize-events/
+        computeLinkSize() {
+            this.$refs.treeItems.forEach(treeItem => treeItem.computeLinkSize())
+        }
+    }
 };
 </script>
 
 <template>
     <section class="decision-tree">
         <aside class="decision-tree__aside">
-            columns: {{dimensions.columns}}
+            columns: {{ dimensions.columns }}
             <br />
-            rows: {{dimensions.rows}}
+            rows: {{ dimensions.rows }}
         </aside>
-        <div class="decision-tree__content" :style="treeStyle">
+        <div class="decision-tree__content" :style="treeStyle" v-resize:debounce.50="computeLinkSize">
             <decision-tree-item
                 v-for="node in arrayTree"
                 :key="node._id"
@@ -107,10 +116,12 @@ export default {
                 :scale-col-factor="dimensions.scaleWitdhFactor"
                 :scale-row-factor="dimensions.scaleHeightFactor"
                 :top-shit="dimensions.topShit"
+                ref="treeItems"
+                
             >
-                <strong>{{node._id}}</strong>
+                <strong>{{ node._id }}</strong>
                 <br />
-                {{ node.data.text || `avg. value: ${node.data.value}`}}
+                {{ node.data.text || `avg. value: ${node.data.value}` }}
             </decision-tree-item>
         </div>
     </section>

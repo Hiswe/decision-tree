@@ -1,6 +1,4 @@
 <script>
-import debounce from 'lodash.debounce';
-
 function getElementHeight($el) {
     const height = $el.offsetHeight;
     const computedStyles = getComputedStyle($el, null);
@@ -67,19 +65,6 @@ export default {
                 'decision-tree-item__line--no': !this.isParentLower,
             };
         },
-    },
-    created() {
-        // TODO: maybe improve with
-        // https://www.vuescript.com/vue-directive-window-resize-events/
-        this.computeLinkSize = debounce(this.computeLinkSize, 50);
-    },
-    mounted() {
-        window.requestAnimationFrame(() => this.computeLinkSize());
-        window.addEventListener(`resize`, this.computeLinkSize);
-        // console.log(this.getWrapper)
-    },
-    beforeDestroy() {
-        window.removeEventListener(`resize`, this.computeLinkSize);
     },
     methods: {
         getGridPosition(d3Node) {
