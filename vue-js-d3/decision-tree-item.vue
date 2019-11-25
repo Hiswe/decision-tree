@@ -33,8 +33,8 @@ export default {
             if (this.isRoot) return false;
             return this.parentPosition.rowStart - this.position.rowStart > 0;
         },
-        isLast() {
-
+        isLeaf() {
+            return this.node.isLast
         },
         nodeContentClasses() {
             return {
@@ -100,7 +100,7 @@ export default {
     <div class="decision-tree-item">
         <div class="decision-tree-item__node" :style="nodeStyles">
             <div class="decision-tree-item__node-content" :class="nodeContentClasses">
-                <slot :node="node" :is-root="isRoot" :is-higher="isHigher" />
+                <slot :node="node" :is-root="isRoot" :is-leaf="isLeaf" :is-higher="isHigher" />
             </div>
         </div>
         <div

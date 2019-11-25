@@ -98,7 +98,7 @@ export default {
                         class="decision-tree__node"
                         :class="{
                             'decision-tree__node--root': slotProps.isRoot,
-                            'decision-tree__node--root': slotProps.isRoot,
+                            'decision-tree__node--leaf': slotProps.isLeaf,
                         }"
                     >
                         <strong>{{ slotProps.node._id }}</strong>
@@ -137,6 +137,8 @@ export default {
 }
 .decision-tree__node--root {
     background: black;
-    color: white;
+}
+.decision-tree__node--leaf  {
+    background: orange;
 }
 </style>
